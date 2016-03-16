@@ -1,0 +1,17 @@
+c:\users\mitchell.urgero\documents\visual studio 2015\Projects\ProjectAmy\ProjectAmy\bin\Debug\ProjectAmy.exe.config
+C:\Users\mitchell.urgero\documents\visual studio 2015\Projects\ProjectAmy\ProjectAmy\bin\Debug\ProjectAmy.exe
+C:\Users\mitchell.urgero\documents\visual studio 2015\Projects\ProjectAmy\ProjectAmy\bin\Debug\ProjectAmy.pdb
+C:\Users\mitchell.urgero\documents\visual studio 2015\Projects\ProjectAmy\ProjectAmy\bin\Debug\Syn.Bot.dll
+C:\Users\mitchell.urgero\documents\visual studio 2015\Projects\ProjectAmy\ProjectAmy\bin\Debug\Syn.Bot.xml
+C:\Users\mitchell.urgero\documents\visual studio 2015\Projects\ProjectAmy\ProjectAmy\obj\Debug\ProjectAmy.csprojResolveAssemblyReference.cache
+C:\Users\mitchell.urgero\documents\visual studio 2015\Projects\ProjectAmy\ProjectAmy\obj\Debug\ProjectAmy.exe
+C:\Users\mitchell.urgero\documents\visual studio 2015\Projects\ProjectAmy\ProjectAmy\obj\Debug\ProjectAmy.pdb
+C:\Users\mitchell.urgero\Documents\GitHub\ProjectAmy\ProjectAmy\bin\Debug\ProjectAmy.exe.config
+C:\Users\mitchell.urgero\Documents\GitHub\ProjectAmy\ProjectAmy\obj\Debug\ProjectAmy.exe
+C:\Users\mitchell.urgero\Documents\GitHub\ProjectAmy\ProjectAmy\obj\Debug\ProjectAmy.pdb
+C:\Users\mitchell.urgero\Documents\GitHub\ProjectAmy\ProjectAmy\bin\Debug\ProjectAmy.exe
+C:\Users\mitchell.urgero\Documents\GitHub\ProjectAmy\ProjectAmy\bin\Debug\ProjectAmy.pdb
+C:\Users\mitchell.urgero\Documents\GitHub\ProjectAmy\ProjectAmy\bin\Debug\SimpleTCP.dll
+C:\Users\mitchell.urgero\Documents\GitHub\ProjectAmy\ProjectAmy\bin\Debug\Syn.Bot.dll
+C:\Users\mitchell.urgero\Documents\GitHub\ProjectAmy\ProjectAmy\bin\Debug\Syn.Bot.xml
+C:\Users\mitchell.urgero\Documents\GitHub\ProjectAmy\ProjectAmy\obj\Debug\ProjectAmy.csprojResolveAssemblyReference.cache
