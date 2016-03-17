@@ -10,18 +10,65 @@ using Syn.Bot.Events;
 using SimpleTCP;
 using System.Xml.Linq;
 using System.Collections;
+using S22.Xmpp;
+using S22.Xmpp.Client;
+using S22.Xmpp.Core;
+using S22.Xmpp.Im;
+using System.IO;
+using System.Windows.Forms;
 
 namespace ProjectAmy
 {
     class Program
     {
+
+        public static XmppClient xclient = new XmppClient("urgero.net", 5222, false);
         static void Main(string[] args)
         {
+            
             Console.WriteLine("ProjectAmy - Ver. 1.0");
             var synBot = new SynBot();
             Console.Write("Enter a username: ");
             String user = Console.ReadLine();
             var botUser = new BotUser(synBot, user);
+            Console.WriteLine();
+            //NOT A RELIABLE WAY TO GET USERS PASSWORD, JUST A QUICK AND DIRTY DEMO!!!!!
+            Console.Write("Enter A Password: ");
+            String pass = Console.ReadLine();
+            Console.Clear();
+            Console.WriteLine("ProjectAmy - Ver. 1.0");
+            Console.WriteLine();
+            Console.WriteLine("Please wait, contacting XMPP Server...");
+            try
+            {
+                xclient.Connect();
+            }catch(Exception ex)
+            {
+                Console.WriteLine("Could not connect to server, you can still chat in console though." + Environment.NewLine + ex.ToString());
+            }
+            if(xclient.Connected == true)
+            {
+                try
+                {
+                    xclient.Authenticate(user, pass);
+                }
+                catch (System.Security.Authentication.AuthenticationException ex)
+                {
+                    Console.WriteLine("Authentication failure!." + Environment.NewLine + ex.ToString());
+                }
+
+                if (xclient.Authenticated == true)
+                {
+                    Console.WriteLine("Logged into urgero.net:5222 xmpp protocol.");
+                    
+                    //No error handlers yet, lets focus on OnNewMessage first...
+                    //xclient.Error += OnError;
+                    xclient.Message += OnNewMessage;
+
+                }
+
+
+            }
             Console.WriteLine();
             Console.WriteLine("Loading brain files, please wait...");
             Console.WriteLine();
@@ -77,6 +124,10 @@ namespace ProjectAmy
                 String message = Console.ReadLine();
                 if(message == "exit")
                 {
+                    if(xclient.Connected == true)
+                    {
+                        xclient.Dispose();
+                    }
                     //var settings = synBot.Settings.GetDocument();
                     //settings.Save("package\\BotSettings.siml");
                     Console.WriteLine("--------------------");
@@ -158,6 +209,49 @@ namespace ProjectAmy
             }
 
             Console.WriteLine("--------------------------------");
+        }
+        static void OnNewMessage(object sender, S22.Xmpp.Im.MessageEventArgs e)
+        {
+            String resID = e.Jid.Resource;
+            String domain = e.Jid.Domain;
+            String jid = e.Jid.ToString().Replace(resID, "");
+            jid = jid.Replace(domain, "");
+            jid = jid.Replace("@/", "");
+            String mes = e.Message.Body;
+            if (CheckIfFormIsOpen(jid, mes) == true)
+            {
+
+            }
+            else
+            {
+                var invokingForm = Application.OpenForms[0]; // or whatever Form you can access
+                if (invokingForm.InvokeRequired)
+                {
+                    invokingForm.BeginInvoke(new EventHandler<S22.Xmpp.Im.MessageEventArgs>(OnNewMessage), sender, e);
+                    return; // important!!!
+                }
+                MessageForm tempMsg = new MessageForm(jid, domain);
+
+                tempMsg._msgText(jid, mes);
+                tempMsg.frmId = jid;
+                tempMsg.Show();
+            }
+
+
+        }
+        static bool CheckIfFormIsOpen(string id, string message)
+        {
+
+            FormCollection fc = Application.OpenForms;
+            foreach (MessageForm frm in fc.OfType<MessageForm>())
+            {
+                if (frm.frmId == id)
+                {
+                    frm._msgText(id, message);
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

@@ -15,3 +15,7 @@ C:\Users\mitchell.urgero\Documents\GitHub\ProjectAmy\ProjectAmy\bin\Debug\Simple
 C:\Users\mitchell.urgero\Documents\GitHub\ProjectAmy\ProjectAmy\bin\Debug\Syn.Bot.dll
 C:\Users\mitchell.urgero\Documents\GitHub\ProjectAmy\ProjectAmy\bin\Debug\Syn.Bot.xml
 C:\Users\mitchell.urgero\Documents\GitHub\ProjectAmy\ProjectAmy\obj\Debug\ProjectAmy.csprojResolveAssemblyReference.cache
+C:\Users\mitchell.urgero\Documents\GitHub\ProjectAmy\ProjectAmy\obj\Debug\ProjectAmy.MessageForm.resources
+C:\Users\mitchell.urgero\Documents\GitHub\ProjectAmy\ProjectAmy\obj\Debug\ProjectAmy.csproj.GenerateResource.Cache
+C:\Users\mitchell.urgero\Documents\GitHub\ProjectAmy\ProjectAmy\bin\Debug\S22.Xmpp.dll
+C:\Users\mitchell.urgero\Documents\GitHub\ProjectAmy\ProjectAmy\bin\Debug\S22.Xmpp.xml
