@@ -8,6 +8,9 @@ using System.Reflection;
 using System.IO;
 using Syn.Bot.Events;
 using SimpleTCP;
+using System.Xml.Linq;
+using System.Collections;
+
 namespace ProjectAmy
 {
     class Program
@@ -41,15 +44,16 @@ namespace ProjectAmy
             }
             try
             {
-                var fileMem = File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory() + "\\package", botUser.ID, "Memorized.siml"));
-                synBot.AddSiml(fileMem);
+                //var fileMem = File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory() + "\\package", botUser.ID, "Memorized.siml"));
+                //synBot.AddSiml(fileMem);
+                var memPackage = File.ReadAllText("package\\"+ user +"\\memory.simlpk");
+                synBot.PackageManager.LoadFromString(simlPackage);
                 Console.WriteLine("Loaded personal user Memory file...");
             }catch(Exception ex)
             {
                 Console.WriteLine("No memory file for user " + botUser.ID);
             }
 
-            
             bool isChat = true;
 
             var interactions = synBot.Stats.Interactions;
@@ -73,6 +77,30 @@ namespace ProjectAmy
                 String message = Console.ReadLine();
                 if(message == "exit")
                 {
+                    //var settings = synBot.Settings.GetDocument();
+                    //settings.Save("package\\BotSettings.siml");
+                    Console.WriteLine("--------------------");
+                    Console.WriteLine("Writing memory to package for later...");
+
+                    //For some reason the following does not work.
+                    try
+                    {
+                        var elementList = new List<XDocument>();
+                        foreach (var simlFile in Directory.GetFiles(@"package\\" + user, "*.siml"))
+                        {
+                            var simlElement = XElement.Load(simlFile);
+                            elementList.Add(simlElement.Document);
+                        }
+                        var xdoc = new XDocument(elementList);
+                        var packageString = synBot.PackageManager.ConvertToPackage(elementList);
+                        File.WriteAllText(@"package\\" + user + "\\memory.simlpk", packageString);
+                    }catch(Exception ex)
+                    {
+                        Console.WriteLine("ERROR: " + ex.ToString());
+                        Console.ReadLine();
+                    }
+
+                    Console.WriteLine("--------------------");
                     Environment.Exit(0);
                 }
                 var chatReq = new ChatRequest(message, botUser);
@@ -85,13 +113,51 @@ namespace ProjectAmy
         }
         static void SynBot_Learning(object sender, LearningEventArgs e)
         {
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "package\\Learned.siml");
-            e.Document.Save(filePath);
+            Console.WriteLine("--------------------------------");
+            try
+            {
+                Console.WriteLine("Writing to learn file...");
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "package\\Learned.siml");
+                e.Document.Save(filePath);
+                Console.WriteLine("Saved learn file!");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Write Failed: " + ex.Message);
+            }
+            Console.WriteLine("--------------------------------");
         }
         static void synBot_Memorizing(object sender, MemorizingEventArgs e)
         {
-            var filePath = Path.Combine(Directory.GetCurrentDirectory() + "\\package", e.User.ID, "Memorized.siml");
-            e.Document.Save(filePath);
+            Random random = new Random();
+            string randNum = "";
+            for(int i = 0; i < 10; i++)
+            {
+                int randomNumber = random.Next(0, 100);
+                randNum += randomNumber.ToString();
+            }
+            Console.WriteLine("--------------------------------");
+            Console.WriteLine("Writing to memory file for user: " + e.User.ID);
+            try
+            {
+                if (Directory.Exists(Directory.GetCurrentDirectory() + "\\package\\" + e.User.ID))
+                {
+                    var filePath = Path.Combine(Directory.GetCurrentDirectory() + "\\package", e.User.ID, "Memorized-" + randNum + ".siml");
+                    e.Document.Save(filePath);
+                }
+                else
+                {
+                    Directory.CreateDirectory(Directory.GetCurrentDirectory() + "\\package\\" + e.User.ID);
+                    var filePath = Path.Combine(Directory.GetCurrentDirectory() + "\\package", e.User.ID, "Memorized"+ randNum + ".siml");
+                    e.Document.Save(filePath);
+                }
+                Console.WriteLine("Write success!");
+            } catch(Exception ex)
+            {
+                Console.WriteLine("Write failed: " + ex.Message);
+            }
+
+            Console.WriteLine("--------------------------------");
         }
     }
 }

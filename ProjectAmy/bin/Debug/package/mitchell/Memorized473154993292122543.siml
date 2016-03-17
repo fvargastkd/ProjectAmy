@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Siml>
+  <Concept Name="learn" Type="Public" Repeat="true">
+    <Model>
+      <Pattern>WHAT ISHOT</Pattern>
+      <Response>the food</Response>
+    </Model>
+  </Concept>
+</Siml>
