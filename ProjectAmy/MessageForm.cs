@@ -73,7 +73,7 @@ namespace ProjectAmy
 
         private void MessageForm_Load(object sender, EventArgs e)
         {
-
+            
         }
         public void _msgText(String jid, String Message)
         {
@@ -86,7 +86,7 @@ namespace ProjectAmy
         public void appendMsg(String jid, String Message)
         {
             String timeNow = DateTime.Now.ToString("hh:mm:ss tt");
-            if (jid == "You")
+            if (jid == "Amy")
             {
                 richTextBox1.SelectionColor = Color.Cyan;
                 richTextBox1.AppendText("[" + timeNow + "]" + jid + ": ");

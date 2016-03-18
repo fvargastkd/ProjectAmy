@@ -19,3 +19,4 @@ C:\Users\mitchell.urgero\Documents\GitHub\ProjectAmy\ProjectAmy\obj\Debug\Projec
 C:\Users\mitchell.urgero\Documents\GitHub\ProjectAmy\ProjectAmy\obj\Debug\ProjectAmy.csproj.GenerateResource.Cache
 C:\Users\mitchell.urgero\Documents\GitHub\ProjectAmy\ProjectAmy\bin\Debug\S22.Xmpp.dll
 C:\Users\mitchell.urgero\Documents\GitHub\ProjectAmy\ProjectAmy\bin\Debug\S22.Xmpp.xml
+C:\Users\mitchell.urgero\Documents\GitHub\ProjectAmy\ProjectAmy\obj\Debug\ProjectAmy.Form1.resources

@@ -16,16 +16,30 @@ using S22.Xmpp.Core;
 using S22.Xmpp.Im;
 using System.IO;
 using System.Windows.Forms;
+using System.Threading;
 
 namespace ProjectAmy
 {
     class Program
     {
 
-        public static XmppClient xclient = new XmppClient("urgero.net", 5222, false);
+        public static XmppClient xclient = new XmppClient("urgero.org", 5222, true);
+        public static bool firstRun = false;
+        [STAThread]
         static void Main(string[] args)
         {
-            
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            var frm = new Form1();
+            Thread t = new Thread(ConsoleInputThreadProc);
+            t.Start(frm);
+            Application.Run(frm);
+            //---------------------------------------------------//
+
+        }
+        static void ConsoleInputThreadProc(object state)
+        {
+            xclient.Message += OnNewMessage;
             Console.WriteLine("ProjectAmy - Ver. 1.0");
             var synBot = new SynBot();
             Console.Write("Enter a username: ");
@@ -42,11 +56,12 @@ namespace ProjectAmy
             try
             {
                 xclient.Connect();
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 Console.WriteLine("Could not connect to server, you can still chat in console though." + Environment.NewLine + ex.ToString());
             }
-            if(xclient.Connected == true)
+            if (xclient.Connected == true)
             {
                 try
                 {
@@ -60,10 +75,10 @@ namespace ProjectAmy
                 if (xclient.Authenticated == true)
                 {
                     Console.WriteLine("Logged into urgero.net:5222 xmpp protocol.");
-                    
+
                     //No error handlers yet, lets focus on OnNewMessage first...
                     //xclient.Error += OnError;
-                    xclient.Message += OnNewMessage;
+
 
                 }
 
@@ -85,7 +100,8 @@ namespace ProjectAmy
                 var fileLearn = File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "package\\Learned.siml"));
                 synBot.AddSiml(fileLearn);
                 Console.WriteLine("Loaded learning file...");
-            } catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 Console.WriteLine("Project Amy has not learned anything new yet...");
             }
@@ -93,10 +109,11 @@ namespace ProjectAmy
             {
                 //var fileMem = File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory() + "\\package", botUser.ID, "Memorized.siml"));
                 //synBot.AddSiml(fileMem);
-                var memPackage = File.ReadAllText("package\\"+ user +"\\memory.simlpk");
+                var memPackage = File.ReadAllText("package\\" + user + "\\memory.simlpk");
                 synBot.PackageManager.LoadFromString(simlPackage);
                 Console.WriteLine("Loaded personal user Memory file...");
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 Console.WriteLine("No memory file for user " + botUser.ID);
             }
@@ -116,51 +133,56 @@ namespace ProjectAmy
             Console.WriteLine("Model count: " + modelCount);
             Console.WriteLine("-----------------------------------");
             Console.WriteLine();
-
+            Console.WriteLine("Brain Loaded.");
             //Actual Chatting Session:
-            while (isChat == true)
+            if (xclient.Connected == false)
             {
-                Console.Write("Enter Message: ");
-                String message = Console.ReadLine();
-                if(message == "exit")
+                while (isChat == true)
                 {
-                    if(xclient.Connected == true)
+                    Console.Write("Enter Message: ");
+                    String message = Console.ReadLine();
+                    if (message == "exit")
                     {
-                        xclient.Dispose();
-                    }
-                    //var settings = synBot.Settings.GetDocument();
-                    //settings.Save("package\\BotSettings.siml");
-                    Console.WriteLine("--------------------");
-                    Console.WriteLine("Writing memory to package for later...");
-
-                    //For some reason the following does not work.
-                    try
-                    {
-                        var elementList = new List<XDocument>();
-                        foreach (var simlFile in Directory.GetFiles(@"package\\" + user, "*.siml"))
+                        if (xclient.Connected == true)
                         {
-                            var simlElement = XElement.Load(simlFile);
-                            elementList.Add(simlElement.Document);
+                            xclient.Dispose();
                         }
-                        var xdoc = new XDocument(elementList);
-                        var packageString = synBot.PackageManager.ConvertToPackage(elementList);
-                        File.WriteAllText(@"package\\" + user + "\\memory.simlpk", packageString);
-                    }catch(Exception ex)
-                    {
-                        Console.WriteLine("ERROR: " + ex.ToString());
-                        Console.ReadLine();
-                    }
+                        //var settings = synBot.Settings.GetDocument();
+                        //settings.Save("package\\BotSettings.siml");
+                        Console.WriteLine("--------------------");
+                        Console.WriteLine("Writing memory to package for later...");
 
-                    Console.WriteLine("--------------------");
-                    Environment.Exit(0);
-                }
-                var chatReq = new ChatRequest(message, botUser);
-                var chatResult = synBot.Chat(chatReq);
-                if (chatResult.Success)
-                {
-                    Console.WriteLine("Amy: " + chatResult.BotMessage);
+                        //For some reason the following does not work.
+                        try
+                        {
+                            var elementList = new List<XDocument>();
+                            foreach (var simlFile in Directory.GetFiles(@"package\\" + user, "*.siml"))
+                            {
+                                var simlElement = XElement.Load(simlFile);
+                                elementList.Add(simlElement.Document);
+                            }
+                            var xdoc = new XDocument(elementList);
+                            var packageString = synBot.PackageManager.ConvertToPackage(elementList);
+                            File.WriteAllText(@"package\\" + user + "\\memory.simlpk", packageString);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine("ERROR: " + ex.ToString());
+                            Console.ReadLine();
+                        }
+
+                        Console.WriteLine("--------------------");
+                        Environment.Exit(0);
+                    }
+                    var chatReq = new ChatRequest(message, botUser);
+                    var chatResult = synBot.Chat(chatReq);
+                    if (chatResult.Success)
+                    {
+                        Console.WriteLine("Amy: " + chatResult.BotMessage);
+                    }
                 }
             }
+
         }
         static void SynBot_Learning(object sender, LearningEventArgs e)
         {
