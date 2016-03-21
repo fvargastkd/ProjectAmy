@@ -14,7 +14,6 @@ using S22.Xmpp;
 using S22.Xmpp.Client;
 using S22.Xmpp.Core;
 using S22.Xmpp.Im;
-using System.IO;
 using System.Windows.Forms;
 using System.Threading;
 
